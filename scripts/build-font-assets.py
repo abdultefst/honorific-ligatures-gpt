@@ -156,7 +156,17 @@ def glyph_for_form(font: TTFont, hb_font: hb.Font, letter: str, form: str) -> di
             asset["form"] = form
             asset["sampleContext"] = context
             return asset
-    raise RuntimeError(f"OpenType shaping failed for {letter!r} ({form}) after {len(trials)} context samples")
+    # A small number of display fonts collapse a glyph into a larger
+    # contextual ligature for every available neighbor sample. In that case,
+    # preserve the typeface's own isolated outline for that form instead of
+    # borrowing the shape from another font or aborting the entire build.
+    records = shaped_records(hb_font, [letter])
+    asset = outline_asset(font, records, f"{letter}:{form}:isolated-fallback", {0})
+    if asset is not None:
+        asset["form"] = form
+        asset["fallbackForm"] = "isolated outline from the same typeface"
+        return asset
+    raise RuntimeError(f"OpenType shaping failed for {letter!r} ({form}); no same-typeface fallback outline")
 
 
 def compile_font(key: str, family: str, path: str, source: str, axes: dict | None):
