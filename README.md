@@ -1,25 +1,26 @@
-# رَونَق — Arabic Honorific Art Studio
+# رَونَق — Arabic Art Studio
 
-A small Arabic-first web app that converts common Islamic honorific phrases into artistic calligraphic ligatures in a live preview.
+An Arabic-first, browser-based typography studio that turns **any Arabic text** into a styled calligraphic composition. Unlike the earlier phrase-replacement version, it does not require a phrase to exist in a predefined ligature list.
 
 ## Features
-- Arabic RTL interface and live text preview.
-- Matches 40+ known honorific phrases, including رحمـه الله، رضي الله عنه، صلى الله عليه وسلم، عز وجل.
-- Browse a glyph gallery and insert phrases with one click.
-- Copy the rendered output or copy readable Arabic text.
-- Export an SVG preview.
-- Browser-only processing; the typed text is not sent to a backend.
-- Designed for GitHub Pages; no build step required.
+- Live preview for arbitrary Arabic text, names, quotations, and longer phrases.
+- Five web-font styles: Aref Ruqaa, Lateef, Scheherazade New, Reem Kufi, and Noto Naskh Arabic.
+- Custom ink palettes, four backgrounds, decorative frames, layout presets, and font-size control.
+- Sample phrases, character count, copy text, and SVG export.
+- Responsive desktop/mobile interface.
+- No backend and no text upload; text stays in the browser.
+- Static HTML: no build process required, suitable for GitHub Pages.
+
+## How it works
+Modern browsers use Arabic script shaping and bidirectional text layout to select contextual letterforms, connect letters, position marks, and apply font OpenType features. The selected font controls the visual style. This creates a calligraphic treatment for arbitrary text; it does not automatically redesign every phrase as a unique hand-composed traditional calligraphy piece. Exported SVG contains text and may load its selected Google Font over the internet.
 
 ## Run locally
-Open `index.html` in a modern browser. An internet connection is required to load the WOFF2 font used for the calligraphic ligatures.
+Open `index.html` in a modern browser with internet access to load Google Fonts.
 
-## Publish with GitHub Pages
-In the repository settings, open **Pages**, select **Deploy from a branch**, choose **main** and **/(root)**, then save. The site should appear at:
-`https://abdultefst.github.io/honorific-ligatures-gpt/`
+## GitHub Pages
+The workflow at `.github/workflows/pages.yml` deploys the repository root. In **Settings → Pages**, choose **GitHub Actions** as the source if it is not already enabled.
 
-## Font and artwork attribution
-The calligraphic font is loaded from [Arabic Honorifics Complete](https://github.com/eraduz/ArabicHonorificsComplete), built from artwork by **BaAlwi Heritage (ID)** ([source artwork](https://github.com/baalwi-id/arabic-honorific-ligatures)), licensed under **CC BY 4.0**. This project is a separate interface and should retain that attribution. Changes include the browser UI, phrase matching, and export workflow.
+Expected URL: https://abdultefst.github.io/honorific-ligatures-gpt/
 
-## Important copy/paste note
-PUA characters U+E900–U+E93C need the matching font to display as intended. Use the “Copy Arabic text” button for portable, readable Arabic. Unicode characters such as ﷺ and ﷽ are more portable, although their appearance depends on the receiving font.
+## Font licensing
+The listed font families are available through Google Fonts and are published under open font licenses. Check each font's current license and attribution details at https://fonts.google.com/ before redistributing modified font files.
