@@ -1,26 +1,50 @@
-# رَونَق — Arabic Art Studio
+# رَونَق — فنّ الخط بالكود
 
-An Arabic-first, browser-based typography studio that turns **any Arabic text** into a styled calligraphic composition. Unlike the earlier phrase-replacement version, it does not require a phrase to exist in a predefined ligature list.
+Arabic-first, code-generated calligraphy artwork built with self-contained SVG paths. The artwork is **not rendered as browser text** and does not depend on Google Fonts or a remote font service.
 
 ## Features
-- Live preview for arbitrary Arabic text, names, quotations, and longer phrases.
-- Five web-font styles: Aref Ruqaa, Lateef, Scheherazade New, Reem Kufi, and Noto Naskh Arabic.
-- Custom ink palettes, four backgrounds, decorative frames, layout presets, and font-size control.
-- Sample phrases, character count, copy text, and SVG export.
-- Responsive desktop/mobile interface.
-- No backend and no text upload; text stays in the browser.
-- Static HTML: no build process required, suitable for GitHub Pages.
 
-## How it works
-Modern browsers use Arabic script shaping and bidirectional text layout to select contextual letterforms, connect letters, position marks, and apply font OpenType features. The selected font controls the visual style. This creates a calligraphic treatment for arbitrary text; it does not automatically redesign every phrase as a unique hand-composed traditional calligraphy piece. Exported SVG contains text and may load its selected Google Font over the internet.
-
-## Run locally
-Open `index.html` in a modern browser with internet access to load Google Fonts.
+- Contextual Arabic letter forms and right-to-left word layout.
+- Procedural composition with curves, frames, geometric details, texture, and metallic shading.
+- Five art modes: royal, flowing, circular seal, geometric, and minimal.
+- Six palettes and a deterministic seed that generates variations of the same phrase.
+- Export standalone SVG vector paths or high-resolution PNG.
+- Runs entirely in the browser; no server, paid API, runtime network request, or build step is required.
+- Hosted on GitHub Pages.
 
 ## GitHub Pages
-The workflow at `.github/workflows/pages.yml` deploys the repository root. In **Settings → Pages**, choose **GitHub Actions** as the source if it is not already enabled.
 
-Expected URL: https://abdultefst.github.io/honorific-ligatures-gpt/
+Workflow: `.github/workflows/pages.yml`. Pages publishes the repository root and the JavaScript modules in `src/`.
 
-## Font licensing
-The listed font families are available through Google Fonts and are published under open font licenses. Check each font's current license and attribution details at https://fonts.google.com/ before redistributing modified font files.
+Live URL: https://abdultefst.github.io/honorific-ligatures-gpt/
+
+To enable Pages after forking, open **Settings → Pages → Build and deployment → Source** and select **GitHub Actions**. Check the workflow run for the exact build/deploy status.
+
+## Architecture
+
+- `index.html`: responsive Arabic-first studio.
+- `src/main.js`: controls and SVG/PNG export.
+- `src/art-engine.js`: algorithmic composition, path placement, ornaments, frames, and gradients.
+- `src/arabic.js`: Arabic normalization, contextual joining forms, lam–alef handling, and glyph layout.
+- `src/generated/glyphs.js`: compiled Bézier outlines for supported Arabic letter forms.
+- `src/hash.js`: deterministic variation helpers.
+
+The exported SVG contains vector paths and SVG primitives, not live text nodes, web-font imports, or external images.
+
+## Known limitations
+
+- Glyph silhouettes are compiled from Amiri Regular outlines and then composed and decorated programmatically. They are not original hand-drawn glyph skeletons.
+- Harakat, Quranic recitation marks, punctuation, and Latin characters are not rendered as vector marks in this version.
+- The result is procedural art, not a claim of professionally reviewed Thuluth, Diwani, or another traditional script. Please verify the visual result before religious, engraved, legal, or permanent use.
+
+## Run locally
+
+Serve the repository directory with a static server (ES modules do not run reliably from a `file://` URL):
+
+    python -m http.server 8000
+
+Then open `http://localhost:8000`.
+
+## Licensing
+
+See [THIRD_PARTY.md](THIRD_PARTY.md), [LICENSES/NAQSH-MIT.txt](LICENSES/NAQSH-MIT.txt), and [LICENSES/AMIRI-OFL.txt](LICENSES/AMIRI-OFL.txt).
