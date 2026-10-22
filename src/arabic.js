@@ -1,10 +1,23 @@
 import { GLYPH_ASSETS } from './generated/glyphs.js';
+import { FONT_GLYPHS } from './generated/font-styles.js';
 import { keyedShuffle } from './hash.js';
 import {
   ARABIC_ALPHABET,
   LETTER_NAMES,
   NON_LEFT_JOINING,
 } from './letters.js';
+
+const FONT_ASSETS = Object.freeze({ amiri: GLYPH_ASSETS, ...FONT_GLYPHS });
+
+export const VECTOR_FONT_STYLES = Object.freeze([
+  { key: 'amiri', name: 'نسخ تقليدي · Amiri' },
+  { key: 'aref', name: 'رقعة · Aref Ruqaa' },
+  { key: 'reemkufi', name: 'كوفي هندسي · Reem Kufi' },
+  { key: 'rakkas', name: 'رقّاص زخرفي · Rakkas' },
+  { key: 'katibeh', name: 'كاتبة · Katibeh' },
+  { key: 'lateef', name: 'لطيف انسيابي · Lateef' },
+  { key: 'scheherazade', name: 'نسخ واضح · Scheherazade New' },
+]);
 
 const ALIASES = Object.freeze({
   'أ': 'ا',
@@ -73,28 +86,32 @@ function joins(characters, index) {
   return 'isolated';
 }
 
-/** Resolve Arabic contextual forms and the lam-alef ligature. */
-export function shapeLetters(characters) {
+/** Resolve Arabic contextual forms from a selected, precompiled vector typeface. */
+export function shapeLetters(characters, fontStyle = 'amiri') {
+  const assets = FONT_ASSETS[fontStyle] ?? GLYPH_ASSETS;
   const result = [];
 
   for (let index = 0; index < characters.length; index += 1) {
     const character = characters[index];
-
     if (character === 'ل' && characters[index + 1] === 'ا') {
       const previousJoin = index > 0 && connectsLeft(characters[index - 1]);
       const form = previousJoin ? 'final' : 'isolated';
-      const glyph = GLYPH_ASSETS.ligatures.lamAlef[form];
-      result.push({ character: 'لا', name: 'lam-alef', form, glyph });
-      index += 1;
-      continue;
+      const ligature = assets.ligatures?.lamAlef?.[form];
+      if (ligature) {
+        result.push({ character: 'لا', name: 'lam-alef', form, glyph: ligature });
+        index += 1;
+        continue;
+      }
+      // Some typefaces do not publish a dedicated lam-alef presentation form.
+      // Keep both letters in the chosen typeface rather than silently mixing outlines.
     }
 
     const form = joins(characters, index);
-    const glyph = GLYPH_ASSETS.letters[character]?.[form]
-      ?? GLYPH_ASSETS.letters[character]?.isolated;
+    const glyph = assets.letters[character]?.[form]
+      ?? assets.letters[character]?.isolated;
 
     if (!glyph) {
-      throw new Error(`Missing glyph asset for Arabic letter ${character}`);
+      throw new Error(`Missing vector glyph for ${character} in style ${fontStyle}`);
     }
 
     result.push({ character, name: LETTER_NAMES[character], form, glyph });
@@ -103,8 +120,8 @@ export function shapeLetters(characters) {
   return result;
 }
 
-export function layoutGlyphs(characters) {
-  const shaped = shapeLetters(characters);
+export function layoutGlyphs(characters, fontStyle = 'amiri') {
+  const shaped = shapeLetters(characters, fontStyle);
   let cursor = 0;
   const positioned = [];
 

@@ -1,13 +1,13 @@
 import { renderArtSvg, ART_PALETTES } from './art-engine.js';
 const $=id=>document.getElementById(id);
 const input=$('phrase'),preview=$('artPreview'),status=$('statusLine'),seedInput=$('seed'),scaleInput=$('density'),detailInput=$('detail');
-let mode='classic',palette='gold',activeSvg='',currentHeight=1000;
-function settings(){return {mode,palette,seed:seedInput.value.trim()||input.value,scale:Number(scaleInput.value),detail:Number(detailInput.value)};}
+let mode='classic',palette='gold',fontStyle='amiri',activeSvg='',currentHeight=1000;
+function settings(){return {mode,palette,fontStyle,seed:seedInput.value.trim()||input.value,scale:Number(scaleInput.value),detail:Number(detailInput.value)};}
 function setActive(selector,value,attr){document.querySelectorAll(selector).forEach(el=>{const yes=el.getAttribute(attr)===value;el.classList.toggle('active',yes);el.setAttribute('aria-pressed',String(yes));});}
 function render(){
  try{
   const result=renderArtSvg(input.value,settings());activeSvg=result.svg;currentHeight=result.height;preview.innerHTML=result.svg;preview.classList.remove('empty');
-  status.textContent='تم توليد تكوين متجهي من المسارات — لا توجد خطوط ويب مطلوبة.';status.classList.remove('error-text');
+  status.textContent='أسلوب الحروف: '+result.fontFamily+' · كل حرف مرسوم من مسارات خطّية أصلية.';status.classList.remove('error-text');
   $('statGlyphs').textContent=result.glyphCount.toLocaleString('ar');$('statLines').textContent=result.lineCount.toLocaleString('ar');$('statScale').textContent=Math.round(result.scale*100)+'٪';
   $('paletteName').textContent=ART_PALETTES[palette].name;$('artMeta').textContent=result.width+' × '+result.height+' · SVG Paths';
  }catch(e){
@@ -30,11 +30,12 @@ $('exportPng').addEventListener('click',()=>{
 });
 $('copySvg').addEventListener('click',()=>{if(requireArt())copy(activeSvg);});
 $('copyText').addEventListener('click',()=>copy(input.value));
-$('reset').addEventListener('click',()=>{input.value='وَقُل رَّبِّ زِدْنِي عِلْمًا';seedInput.value='rawnaq-01';mode='classic';palette='gold';scaleInput.value='.43';detailInput.value='3';$('densityOut').textContent='متوازن';$('detailOut').textContent='متوسط';setActive('[data-mode]',mode,'data-mode');setActive('[data-palette]',palette,'data-palette');render();notify('تمت إعادة ضبط التكوين');});
+$('reset').addEventListener('click',()=>{input.value='وَقُل رَّبِّ زِدْنِي عِلْمًا';seedInput.value='rawnaq-01';mode='classic';palette='gold';fontStyle='amiri';scaleInput.value='.43';detailInput.value='3';$('densityOut').textContent='متوازن';$('detailOut').textContent='متوسط';setActive('[data-mode]',mode,'data-mode');setActive('[data-palette]',palette,'data-palette');setActive('[data-font-style]',fontStyle,'data-font-style');render();notify('تمت إعادة ضبط التكوين');});
 $('randomize').addEventListener('click',()=>{const a=crypto.getRandomValues(new Uint32Array(2)).join('-');seedInput.value='rawnaq-'+a;render();notify('تغيّر التكوين مع بقاء النص نفسه');});
 input.addEventListener('input',render);seedInput.addEventListener('input',render);
 scaleInput.addEventListener('input',()=>{$('densityOut').textContent=Number(scaleInput.value)<.36?'صغير':Number(scaleInput.value)>.49?'بارز':'متوازن';render();});
 detailInput.addEventListener('input',()=>{const d=Number(detailInput.value);$('detailOut').textContent=d<2?'هادئ':d>4?'كثيف':'متوسط';render();});
 document.querySelectorAll('[data-mode]').forEach(el=>el.addEventListener('click',()=>{mode=el.getAttribute('data-mode');setActive('[data-mode]',mode,'data-mode');render();}));
 document.querySelectorAll('[data-palette]').forEach(el=>el.addEventListener('click',()=>{palette=el.getAttribute('data-palette');setActive('[data-palette]',palette,'data-palette');render();}));
+document.querySelectorAll('[data-font-style]').forEach(el=>el.addEventListener('click',()=>{fontStyle=el.getAttribute('data-font-style');setActive('[data-font-style]',fontStyle,'data-font-style');render();}));
 render();

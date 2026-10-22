@@ -1,4 +1,4 @@
-import { layoutGlyphs, normalizeArabic } from './arabic.js';
+import { layoutGlyphs, normalizeArabic, VECTOR_FONT_STYLES } from './arabic.js';
 import { keyedFloat, hashHex } from './hash.js';
 
 const W = 1400;
@@ -15,20 +15,20 @@ const round = n => Number(n.toFixed(2));
 const xml = s => String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&apos;");
 const rnd = (seed,key,min,max) => round(keyedFloat(seed,key,min,max));
 
-function shapeWord(raw) {
+function shapeWord(raw, fontStyle) {
   const letters = normalizeArabic(raw);
   if (!letters) return null;
-  const shaped = layoutGlyphs([...letters]);
+  const shaped = layoutGlyphs([...letters], fontStyle);
   const b = shaped.bounds;
   return {letters,tokens:shaped.tokens,bounds:b,width:Math.max(1,b.xMax-b.xMin),height:Math.max(1,b.yMax-b.yMin)};
 }
 function makeLine(words) {
   return {words,width:words.reduce((s,w)=>s+w.width,0)+Math.max(0,words.length-1)*270,height:Math.max(...words.map(w=>w.height))};
 }
-function wrapText(text,maxUnits) {
+function wrapText(text,maxUnits,fontStyle) {
   const lines=[];
   for (const paragraph of String(text).replace(/\r/g,'').split('\n')) {
-    const words=paragraph.trim().split(/\s+/).map(shapeWord).filter(Boolean);
+    const words=paragraph.trim().split(/\s+/).map(word => shapeWord(word, fontStyle)).filter(Boolean);
     let row=[],used=0;
     for (const word of words) {
       const next=used+(row.length?270:0)+word.width;
@@ -101,12 +101,14 @@ function glyphPaths(lines,scale,startY,gapPx,p) {
 export function renderArtSvg(rawText,options={}) {
   const text=String(rawText??'').trim();if(!text)throw new Error('اكتب عبارة عربية أولًا.');
   const mode=MODES.has(options.mode)?options.mode:'classic';
+  const fontStyle=VECTOR_FONT_STYLES.some(item=>item.key===options.fontStyle)?options.fontStyle:'amiri';
+  const fontFamily=VECTOR_FONT_STYLES.find(item=>item.key===fontStyle).name;
   const palette=Object.hasOwn(PALETTES,options.palette)?options.palette:'gold',p=PALETTES[palette];
   const detail=Math.max(1,Math.min(5,Math.round(Number(options.detail)||3)));
   const desired=Math.max(.25,Math.min(.56,Number(options.scale)||.43));
-  const seed=String(options.seed||text),key=seed+'|'+mode+'|'+palette+'|'+detail+'|'+text;
+  const seed=String(options.seed||text),key=seed+'|'+mode+'|'+palette+'|'+fontStyle+'|'+detail+'|'+text;
   const maxWidth=mode==='seal'?790:mode==='geometric'?1060:1160;
-  const lines=wrapText(text,maxWidth/desired);
+  const lines=wrapText(text,maxWidth/desired,fontStyle);
   if(!lines.length)throw new Error('لم أجد حروفًا عربية مدعومة. اكتب نصًا عربيًا واضحًا.');
   if(lines.length>9)throw new Error('النص طويل جدًا لهذا التكوين. استخدم تسعة أسطر أو أقل.');
   const totalUnits=lines.reduce((sum,line)=>sum+line.height,0)+Math.max(0,lines.length-1)*260;
@@ -124,13 +126,13 @@ export function renderArtSvg(rawText,options={}) {
   const marks=Array.from({length:detail*2},(_,i)=>i%2?star(rnd(key,`mx${i}`,110,W-110),rnd(key,`my${i}`,100,height-100),rnd(key,`ms${i}`,4,8),p.light,.8):diamond(rnd(key,`nx${i}`,110,W-110),rnd(key,`ny${i}`,100,height-100),rnd(key,`ns${i}`,4,8),p.ink,.8)).join('');
   const title=xml(text);
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${title}" width="${W}" height="${height}" viewBox="0 0 ${W} ${height}">
-<title>${title}</title><desc>Code-generated Arabic calligraphic composition using standalone vector glyph paths and SVG ornament. No external font or image is needed.</desc>
+<title>${title}</title><desc>Code-generated Arabic calligraphic composition using standalone vector glyph paths from ${fontFamily} and SVG ornament. No runtime font or image is needed.</desc>
 <defs><radialGradient id="${id}-bg" cx="50%" cy="42%" r="78%"><stop offset="0%" stop-color="${p.glow}"/><stop offset="100%" stop-color="${p.bg}"/></radialGradient>
 <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${p.light}"/><stop offset="22%" stop-color="${p.ink}"/><stop offset="46%" stop-color="${p.light}"/><stop offset="64%" stop-color="${p.deep}"/><stop offset="82%" stop-color="${p.ink}"/><stop offset="100%" stop-color="${p.light}"/></linearGradient>
 <filter id="shadow" x="-18%" y="-18%" width="136%" height="136%"><feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/><feOffset dy="4" dx="1" result="offset"/><feComponentTransfer><feFuncA type="linear" slope=".5"/></feComponentTransfer><feMerge><feMergeNode in="offset"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M 44 0 L 0 0 0 44" fill="none" stroke="${p.accent}" stroke-width=".55" opacity=".14"/></pattern></defs>
 <rect width="${W}" height="${height}" fill="url(#${id}-bg)"/>${halo}${mode==='geometric'?`<rect width="${W}" height="${height}" fill="url(#grid)" opacity=".7"/>`:''}${sideLines}${background}${frames}${fl}<g>${marks}</g>${glyphs}
 <g fill="none" stroke="${p.light}" opacity=".28" stroke-width=".8"><path d="M 160 ${height-130} H 355 M ${W-355} ${height-130} H ${W-160}"/><circle cx="${W/2}" cy="${height-130}" r="4" fill="${p.ink}" stroke="none"/><circle cx="${W/2-14}" cy="${height-130}" r="2" fill="${p.light}" stroke="none"/><circle cx="${W/2+14}" cy="${height-130}" r="2" fill="${p.light}" stroke="none"/></g></svg>`;
-  return {svg,width:W,height,normalized:lines.flatMap(l=>l.words.map(w=>w.letters)).join(' '),lineCount:lines.length,glyphCount:lines.reduce((s,l)=>s+l.words.reduce((n,w)=>n+w.tokens.length,0),0),scale};
+  return {svg,width:W,height,fontStyle,fontFamily,normalized:lines.flatMap(l=>l.words.map(w=>w.letters)).join(' '),lineCount:lines.length,glyphCount:lines.reduce((s,l)=>s+l.words.reduce((n,w)=>n+w.tokens.length,0),0),scale};
 }
 export const ART_PALETTES=Object.freeze(Object.fromEntries(Object.entries(PALETTES).map(([key,p])=>[key,{name:p.name,bg:p.bg,ink:p.ink,accent:p.accent}])));

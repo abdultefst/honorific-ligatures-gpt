@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check src/main.js && node --check src/art-engine.js && node --check src/arabic.js && node --check src/hash.js && node --check src/generated/glyphs.js",
+    "build:fonts": "python scripts/build-font-assets.py",
+    "check": "npm run build:fonts && node --check src/main.js && node --check src/art-engine.js && node --check src/arabic.js && node --check src/hash.js && node --check src/generated/glyphs.js && node --check src/generated/font-styles.js",
     "test": "node --test tests/*.test.mjs",
     "validate": "npm run check && npm test"
   }

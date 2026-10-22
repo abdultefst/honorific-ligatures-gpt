@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -20,16 +20,40 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Validate project
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install vector font build dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Validate project and compile real font outlines
         run: npm run validate
+      - name: Save generated typeface paths to the repository
+        run: |
+          git add src/generated/font-styles.js
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Compile Arabic typefaces into vector glyph paths"
+            git push
+          fi
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Prepare static site
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+          cp -R src _site/src
+          cp -R LICENSES _site/LICENSES
+          cp THIRD_PARTY.md _site/THIRD_PARTY.md
+          mkdir -p _site/vendor-fonts
+          cp -R vendor-fonts/licenses _site/vendor-fonts/licenses
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "_site"
   deploy:
     environment:
       name: github-pages
