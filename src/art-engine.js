@@ -83,7 +83,7 @@ function flourishes(seed,p,box,mode,detail,height) {
   }
   return out.join('');
 }
-function glyphPaths(lines,scale,startY,gapPx) {
+function glyphPaths(lines,scale,startY,gapPx,p) {
   const groups=[];let y=startY;
   for(const line of lines){
     const h=line.height*scale,w=line.width*scale;let x=W/2+w/2;
@@ -96,7 +96,7 @@ function glyphPaths(lines,scale,startY,gapPx) {
     y+=h+gapPx;
   }
   const g=groups.join('');
-  return `<g fill="#000" opacity=".52" transform="translate(7 10)">${g}</g><g fill="url(#metal)" stroke="${arguments[4]?.deep||'#76501d'}" stroke-width="2.6" stroke-linejoin="round" filter="url(#shadow)">${g}</g><g fill="none" stroke="${arguments[4]?.light||'#fff0b8'}" stroke-width="1.05" opacity=".55" transform="translate(-1 -1)">${g}</g>`;
+  return `<g fill="#000" opacity=".52" transform="translate(7 10)">${g}</g><g fill="url(#metal)" stroke="${p.deep}" stroke-width="2.6" stroke-linejoin="round" filter="url(#shadow)">${g}</g><g fill="none" stroke="${p.light}" stroke-width="1.05" opacity=".55" transform="translate(-1 -1)">${g}</g>`;
 }
 export function renderArtSvg(rawText,options={}) {
   const text=String(rawText??'').trim();if(!text)throw new Error('اكتب عبارة عربية أولًا.');
