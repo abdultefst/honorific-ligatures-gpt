@@ -39,7 +39,7 @@ input.addEventListener('input',render);
 document.querySelectorAll('[data-example]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.example;render();input.focus()}));
 document.querySelectorAll('[data-font]').forEach(b=>b.addEventListener('click',()=>{s.font=b.dataset.font;document.querySelectorAll('[data-font]').forEach(x=>x.classList.toggle('active',x===b));render()}));
 document.querySelectorAll('[data-color]').forEach(b=>b.addEventListener('click',()=>{s.color=b.dataset.color;document.querySelectorAll('[data-color]').forEach(x=>x.classList.toggle('active',x===b));render()}));
-for(const [attr,group,key] of [['bg','backgrounds','bg'],['frame','frames','frame'],['layout','layouts','layout']])document.querySelectorAll('[data-'+attr+']').forEach(b=>b.addEventListener('click',()=>{s[key]=b.dataset[attr];document.querySelectorAll('#'+group+' button').forEach(x=>x.classList.toggle('active',x===b));render()}));
+for(const [attr,group,key] of [['bg','backgrounds','bg'],['frame','frames','frame'],['layout','layouts','layout']])document.querySelectorAll('button[data-'+attr+']').forEach(b=>b.addEventListener('click',()=>{s[key]=b.dataset[attr];document.querySelectorAll('#'+group+' button').forEach(x=>x.classList.toggle('active',x===b));render()}));
 $('size').addEventListener('input',e=>{s.size=+e.target.value;render()});
 $('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(input.value);notify('تم نسخ النص')}catch{notify('حدد النص وانسخه يدويًا')}});
 function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;')}
