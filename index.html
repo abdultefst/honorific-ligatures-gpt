@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#11100f">
+<meta name="description" content="حوّل العبارات العربية إلى زخارف وخطوط اصطلاحية إسلامية بتصميم فني.">
+<title>رَونَق | Arabic Honorific Art Studio</title>
+<style>
+@font-face{font-family:HonorificArt;src:url('https://raw.githubusercontent.com/eraduz/ArabicHonorificsComplete/main/fonts/ArabicHonorificsComplete-Regular.woff2') format('woff2');font-display:swap}
+:root{color-scheme:dark;--bg:#11100f;--panel:#1a1917;--line:#34312b;--gold:#d8b878;--cream:#f3ead9;--muted:#aaa293;--green:#81977b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#393023 0,transparent 55%),var(--bg);color:var(--cream);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+main{width:min(1040px,100%);margin:auto;padding:36px 22px 54px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding-bottom:20px}.brand{font-size:14px;letter-spacing:.14em;color:var(--gold)}.pill{font-size:12px;border:1px solid #4d4637;border-radius:999px;padding:7px 12px;color:var(--muted)}
+.hero{text-align:center;padding:54px 0 35px}.ornament{color:var(--gold);font-size:25px;letter-spacing:.3em}.hero h1{font-size:clamp(40px,7vw,70px);margin:12px 0 8px;font-weight:500;letter-spacing:-.04em}.hero p{color:var(--muted);font-size:16px;line-height:1.9;max-width:620px;margin:0 auto}
+.workspace{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{background:linear-gradient(145deg,#201e1a,#171614);border:1px solid var(--line);border-radius:18px;padding:20px;min-width:0}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.panel h2{font-size:15px;font-weight:600;margin:0}.hint{font-size:12px;color:var(--muted)}textarea{width:100%;resize:vertical;min-height:230px;background:#121110;border:1px solid #38342c;border-radius:12px;color:var(--cream);padding:16px;font:19px/2 system-ui,sans-serif;outline:none}textarea:focus{border-color:var(--gold)}.preview{min-height:230px;border-radius:12px;background:#121110;border:1px solid #38342c;padding:19px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(25px,4vw,39px);line-height:2.1;overflow-wrap:anywhere;white-space:pre-wrap}.art{font-family:HonorificArt,serif;color:#ead2a0;font-size:1.22em;vertical-align:middle;white-space:nowrap}.empty{font-size:15px;color:#70695e}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}.btn{border:1px solid #504735;background:#25221c;color:var(--cream);border-radius:10px;padding:10px 14px;font:inherit;font-size:13px;cursor:pointer}.btn.primary{background:var(--gold);color:#17130b;border-color:var(--gold);font-weight:650}.btn:hover{filter:brightness(1.12)}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:10px}.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:36px 0 14px}.section-title h2{font-size:19px;margin:0;font-weight:550}.section-title span{font-size:12px;color:var(--muted)}.gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.glyph{border:1px solid var(--line);border-radius:13px;background:#1a1916;padding:14px 8px;text-align:center;cursor:pointer;color:var(--cream);min-width:0}.glyph:hover{border-color:var(--gold);background:#242118}.glyph .art{display:block;font-size:34px;min-height:57px}.glyph small{display:block;color:var(--muted);font-size:11px;line-height:1.7}.note{margin-top:25px;padding:16px;border-right:2px solid var(--gold);background:#1b1915;color:var(--muted);font-size:12px;line-height:1.9}.footer{text-align:center;color:#766f63;font-size:11px;margin-top:28px;line-height:1.9}a{color:var(--gold)}@media(max-width:700px){main{padding:22px 14px 35px}.hero{padding:38px 0 28px}.workspace{grid-template-columns:1fr}.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.top{align-items:flex-start}.panel{padding:14px}}
+</style></head>
+<body><main>
+<header class="top"><div class="brand">رَونَق <span style="color:#766f63">/ HONORIFIC ART STUDIO</span></div><span class="pill">معاينة فنية مباشرة</span></header>
+<section class="hero"><div class="ornament">۞　✦　۞</div><h1>الكلمة… حين تصبح فنًّا</h1><p>اكتب النص العربي، وسيحوّل الموقع العبارات التكريمية المعروفة إلى زخارف خطية مركّبة. جرّب، انسخ، واحتفظ بالنص الأصلي كما كتبته.</p></section>
+<section class="workspace">
+<div class="panel"><div class="panelhead"><h2>النص الأصلي</h2><span class="hint">اكتب أو الصق هنا</span></div><textarea id="source" placeholder="مثال: قال الإمام رحمه الله، وقال رسول الله صلى الله عليه وسلم…">قال الإمام رحمه الله، وقال رسول الله صلى الله عليه وسلم. الله عز وجل.</textarea><div class="actions"><button class="btn" id="clear">مسح النص</button><button class="btn" id="sample">تجربة نص</button></div></div>
+<div class="panel"><div class="panelhead"><h2>المعاينة الفنية</h2><span class="hint">تتحدث تلقائيًا</span></div><div class="preview" id="preview" aria-live="polite"></div><div class="actions"><button class="btn primary" id="copyArt">نسخ الزخرفة</button><button class="btn" id="copyPlain">نسخ النص العربي</button><button class="btn" id="download">تنزيل SVG</button></div><div class="status" id="status" role="status"></div></div>
+</section>
+<div class="section-title"><h2>مكتبة الزخارف</h2><span>اضغط على أي زخرفة لإضافتها للنص</span></div><section class="gallery" id="gallery"></section>
+<div class="note">ملاحظة: الزخارف الفنية الخاصة تعتمد على خط <b>Arabic Honorifics Complete</b>، لذلك قد تظهر كرموز غير واضحة عند نسخها إلى تطبيق لا يحتوي على الخط. زر «نسخ النص العربي» ينسخ العبارة المقروءة بدل الرمز. الخط والأعمال الخطية من مشروع <a href="https://github.com/eraduz/ArabicHonorificsComplete" target="_blank" rel="noreferrer">Arabic Honorifics Complete</a>، والأعمال الأصلية من BaAlwi Heritage (ID)، بترخيص CC BY 4.0.</div>
+<footer class="footer">يعمل داخل المتصفح — لا يتم إرسال النص إلى خادم. <br>رَونَق · مشروع مفتوح المصدر</footer>
+</main>
+<script>
+const items=[
+["عزَّ وجلَّ",0xE900],["جلَّ جلاله",0xE901],["جلَّ وعلا",0xE902],["سبحانه وتعالى",0xE903],["تبارك وتعالى",0xE904],["تعالى",0xE905],
+["صلى الله عليه وعلى آله",0xE906],["صلى الله عليه وعلى آله وسلم",0xE907],["صلى الله عليه وسلم",0xE908],["عليه الصلاة والسلام",0xE90A],["عليها الصلاة والسلام",0xE90B],["عليه السلام",0xE90F],["عليها السلام",0xE910],["عليهم السلام",0xE911],["صلوات الله عليه",0xE913],
+["رضي الله عنه",0xE917],["رضي الله عنها",0xE918],["رضي الله عنهم",0xE919],["رضي الله عنهما",0xE91A],["رضي الله عنهن",0xE91B],
+["رحمه الله",0xE91D],["رحمها الله",0xE91E],["رحمهم الله",0xE91F],["رحمهما الله",0xE920],["رحمة الله عليه",0xE922],["عليه الرحمة",0xE927],["قدس سره",0xE929],["قدس الله سره",0xE92A],["حفظه الله",0xE931],["حفظها الله",0xE932],["حفظهما الله",0xE933],["حفظهم الله",0xE934],["عجّل الله فرجه",0xE935],["غفر الله له",0xE936],["كرم الله وجهه",0xE937],["نفعنا الله به",0xE938],["نوّر الله مرقده",0xE939],["دامت بركاتهم",0xE93A],["طاب ثراه",0xE93B],["دام ظله",0xE93C],
+["ﷺ",0xFDFA],["ﷻ",0xFDFB],["﷽",0xFDFD]
+];
+const $=id=>document.getElementById(id), source=$('source'), preview=$('preview'), status=$('status');
+const norm=s=>s.normalize('NFKC').replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ة/g,'ه').trim();
+const phraseItems=items.filter(([p,cp])=>cp>=0xE900&&cp<=0xE93C).sort((a,b)=>b[0].split(/\s+/).length-a[0].split(/\s+/).length);
+const map=new Map(phraseItems.map(([p,cp])=>[norm(p),[p,String.fromCodePoint(cp)]]));
+function convert(text){
+ const parts=text.match(/[\u0600-\u06FF]+|[^\u0600-\u06FF]+/g)||[]; let out='', plain='', i=0;
+ while(i<parts.length){if(!/^[\u0600-\u06FF]+$/.test(parts[i])){out+=parts[i];plain+=parts[i++];continue}
+ let found=null,end=i;
+ for(let j=Math.min(parts.length,i+12);j>i;j--){const slice=parts.slice(i,j);if(slice.some(x=>! /^[\u0600-\u06FF]+$/.test(x)&&!/^\s+$/.test(x)))continue;const words=slice.filter(x=>/^[\u0600-\u06FF]+$/.test(x));const key=norm(words.join(' '));if(map.has(key)){found=map.get(key);end=j;break}}
+ if(found){out+='<span class="art" title="'+found[0]+'">'+found[1]+'</span>';plain+=found[0];i=end}else{out+=parts[i];plain+=parts[i++];}
+ }
+ return {html:out,plain};
+}
+function render(){const result=convert(source.value);preview.innerHTML=result.html||'<span class="empty">ستظهر الزخرفة هنا…</span>';preview.dataset.plain=result.plain;status.textContent='';}
+source.addEventListener('input',render);render();
+items.forEach(([label,cp])=>{const b=document.createElement('button');b.className='glyph';b.type='button';b.innerHTML='<span class="art">'+String.fromCodePoint(cp)+'</span><small>'+label+'</small>';b.title='إضافة: '+label;b.addEventListener('click',()=>{source.value+=(source.value.trim()?' ':'')+label;render();source.focus()});$('gallery').appendChild(b)});
+$('clear').onclick=()=>{source.value='';render();source.focus()};
+$('sample').onclick=()=>{source.value='قال الإمام رحمه الله، وذكر العلماء رضي الله عنهم، وقال رسول الله صلى الله عليه وسلم. الله عز وجل، سبحانه وتعالى.';render()};
+async function copy(text){try{await navigator.clipboard.writeText(text);status.textContent='تم النسخ بنجاح';}catch{status.textContent='تعذر النسخ تلقائيًا؛ حدّد النص وانسخه يدويًا.'}}
+$('copyArt').onclick=()=>copy(preview.innerText);$('copyPlain').onclick=()=>copy(preview.dataset.plain||source.value);
+$('download').onclick=()=>{const safe=(preview.dataset.plain||source.value).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));const svg='<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420"><rect width="100%" height="100%" fill="#11100f"/><foreignObject x="35" y="35" width="1130" height="350"><div xmlns="http://www.w3.org/1999/xhtml" style="color:#ead2a0;font-family:HonorificArt,serif;font-size:48px;text-align:center;direction:rtl;line-height:1.8">'+preview.innerHTML+'</div></foreignObject><text x="600" y="395" fill="#d8b878" font-size="13" text-anchor="middle">Rawnq · Arabic Honorific Art Studio</text></svg>';const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='rawnq-honorific-art.svg';a.click();URL.revokeObjectURL(a.href);status.textContent='تم تنزيل ملف SVG؛ قد يحتاج الخط إلى الاتصال بالإنترنت.'};
+</script></body></html>
