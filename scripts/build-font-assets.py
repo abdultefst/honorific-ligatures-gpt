@@ -135,20 +135,28 @@ def outline_asset(font: TTFont, records: list[dict], label: str, cluster_filter:
 
 
 def glyph_for_form(font: TTFont, hb_font: hb.Font, letter: str, form: str) -> dict:
-    if form == "isolated":
-        sample, target = [letter], 0
-    elif form == "final":
-        sample, target = ["ب", letter], 1
-    elif form == "initial":
-        sample, target = [letter, "ب"], 0
-    else:
-        sample, target = ["ب", letter, "ب"], 1
-    records = shaped_records(hb_font, sample)
-    asset = outline_asset(font, records, f"{letter}:{form}", {target})
-    if asset is None:
-        raise RuntimeError(f"OpenType shaping failed for {letter!r} ({form})")
-    asset["form"] = form
-    return asset
+    # Display faces may replace a letter together with a neighboring letter via
+    # contextual GSUB. Try several joining contexts and keep a sample where the
+    # target retains its own HarfBuzz cluster, so a neighboring letter is never
+    # accidentally baked into this glyph's outline.
+    contexts = ("ب", "ت", "ن", "م", "س", "ل", "ي", "ف", "ك", "ق", "ح", "ج", "ش", "ص", "ع", "غ", "ث", "ض")
+    trials = (None,) if form == "isolated" else contexts
+    for context in trials:
+        if form == "isolated":
+            sample, target = [letter], 0
+        elif form == "final":
+            sample, target = [context, letter], 1
+        elif form == "initial":
+            sample, target = [letter, context], 0
+        else:
+            sample, target = [context, letter, context], 1
+        records = shaped_records(hb_font, sample)
+        asset = outline_asset(font, records, f"{letter}:{form}", {target})
+        if asset is not None:
+            asset["form"] = form
+            asset["sampleContext"] = context
+            return asset
+    raise RuntimeError(f"OpenType shaping failed for {letter!r} ({form}) after {len(trials)} context samples")
 
 
 def compile_font(key: str, family: str, path: str, source: str, axes: dict | None):
